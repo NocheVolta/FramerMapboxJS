@@ -5,13 +5,14 @@
 
 Simplest way to integrate Mapbox maps on your prototypes; it lets you to use the full API. Obviously you need an active internet connection to load the maps.
 
+<img alt='Mapbox JS gif' src='mapbox.gif' width='240' height='486' />
+
 ### Installation
 
-
-### with Framer Modules
+#### with Framer Modules
 <a href='https://open.framermodules.com/Mapbox%20JS'>
-    <img alt='Install with Framer Modules'
-    src='https://www.framermodules.com/assets/badge@2x.png' width='160' height='40' />
+  <img alt='Install with Framer Modules'
+  src='https://www.framermodules.com/assets/badge@2x.png' width='160' height='40' />
 </a>
 
 #### Manual
