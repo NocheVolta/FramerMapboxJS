@@ -1,0 +1,11 @@
+{
+  "name": "Mapbox JS",
+  "description": "Simplest way to integrate Mapbox maps on your prototypes; it lets you to use the full API.",
+  "author": "Iván Flores",
+
+  "require": "mapboxJS = require 'MapboxJS'" ,
+  "install": "MapboxJS.coffee",
+  "example": "example.coffee",
+
+  "thumb": "mapboxjs.png"
+}
