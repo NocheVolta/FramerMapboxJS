@@ -7,15 +7,22 @@ Simplest way to integrate Mapbox maps on your prototypes; it lets you to use the
 
 ### Installation
 
-##### Manual
+
+### with Framer Modules
+<a href='https://open.framermodules.com/Mapbox%20JS'>
+    <img alt='Install with Framer Modules'
+    src='https://www.framermodules.com/assets/badge@2x.png' width='160' height='40' />
+</a>
+
+#### Manual
 1. Copy `MapboxJS.coffee` file on modules folder inside your Framer project or use Framer Modules button
 2. Add this line on the top `mapboxJS = require "MapboxJS"` (skip this step if you used Framer Modules)
 
 ### How to use
 Init the map with your `accessToken`, generate it on [Mapbox website](https://www.mapbox.com/help/define-access-token/), it's free. **Without this, the map won't work.**  
 ```coffeescript
-  myMap = new mapboxJS
-    accessToken: 'insertHereYourAccessToken'
+myMap = new mapboxJS
+  accessToken: 'insertHereYourAccessToken'
 ```
 ### Customization
 * `style` _String_ : The map's style url. (default **mapbox://styles/mapbox/streets-v9**)
