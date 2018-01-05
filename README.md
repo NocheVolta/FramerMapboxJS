@@ -6,6 +6,7 @@
 Simplest way to integrate Mapbox maps on your prototypes; it lets you to use the full API. Obviously you need an active internet connection to load the maps.
 
 <img alt='Mapbox JS gif' src='mapbox.gif' width='240' height='486' />
+![alt text](https://raw.githubusercontent.com/NocheVolta/FramerMapboxJS/master/mapboxjs.gif)
 
 ### Installation
 
