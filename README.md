@@ -3,13 +3,11 @@
 ![PRs Welcome](https://img.shields.io/badge/PRs-welcome-brightgreen.svg)
 ![Maintenance](https://img.shields.io/maintenance/yes/2018.svg)
 
-Simplest way to integrate Mapbox maps on your prototypes; it lets you to use the full API. Obviously you need an active internet connection to load the maps.
+Simplest way to integrate Mapbox maps on your prototypes; you can define size, zoom, center point and even it lets you to use the full API. Obviously you need an active internet connection to load the maps.
 
 ![mapbox gif](/mapboxjs.gif?raw=true)
 
 ### Installation
-
-#### with Framer Modules
 <a href='https://open.framermodules.com/Mapbox%20JS'>
   <img alt='Install with Framer Modules'
   src='https://www.framermodules.com/assets/badge@2x.png' width='160' height='40' />
@@ -17,7 +15,10 @@ Simplest way to integrate Mapbox maps on your prototypes; it lets you to use the
 
 #### Manual
 1. Copy `MapboxJS.coffee` file on modules folder inside your Framer project or use Framer Modules button
-2. Add this line on the top `mapboxJS = require "MapboxJS"` (skip this step if you used Framer Modules)
+2. Add this line on the top 
+```coffeescript
+mapboxJS = require "MapboxJS"
+```
 
 ### How to use
 Init the map with your `accessToken`, generate it on [Mapbox website](https://www.mapbox.com/help/define-access-token/), it's free. **Without this, the map won't work.**  
