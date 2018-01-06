@@ -14,7 +14,7 @@ Simplest way to integrate Mapbox maps on your prototypes; you can define size, z
 </a>
 
 #### Manual
-1. Copy `MapboxJS.coffee` file on modules folder inside your Framer project or use Framer Modules button
+1. Copy `MapboxJS.coffee` file on modules folder inside your Framer project
 2. Add this line on the top 
 ```coffeescript
 mapboxJS = require "MapboxJS"
