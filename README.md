@@ -31,6 +31,8 @@ myMap = new mapboxJS
 * `center` _Array_ : The inital geographical centerpoint of the map. (default **[-3.703, 40.409]**, is Madrid) \*
 * `zoom` _Integer_ : The initial zoom level of the map. (default **13.9**)
 * `size` _Integer or Object_ : Size of the map, set width and height using **{ width:640, height: 480 }** or use a single number to create a square. (default **Screen.size**)
+* `x` : Initial X position (default 0)
+* `y` : Initial Y position (default 0)
 * `interactive` _Boolean_ : If  false , no mouse, touch, or keyboard listeners will be attached to the map, so it will not respond to interaction. (default **true**)
 
 \* _Mapbox GL uses longitude, latitude coordinate order (as opposed to latitude, longitude) to match GeoJSON._

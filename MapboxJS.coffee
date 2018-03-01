@@ -55,6 +55,8 @@ class MapboxJS extends Layer
 		@options.zoom ?= 13.9
 		@options.size ?= Screen.size
 		@options.interactive ?= true
+		@options.x ?= 0
+		@options.y ?= 0
 
 		if !@options.accessToken
 			print "ERROR: accessToken is required"
@@ -63,6 +65,8 @@ class MapboxJS extends Layer
 		@options.mapboxWrapper = mapboxWrapper = new Layer
 			size: @options.size
 			name: 'mapboxjs'
+			x: @options.x
+			y: @options.y
 
 		mapboxWrapper.ignoreEvents = false
 
