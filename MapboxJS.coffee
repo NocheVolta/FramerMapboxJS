@@ -32,8 +32,8 @@ mapboxCSS_fix = """
 }
 """
 
-insertScript("https://api.tiles.mapbox.com/mapbox-gl-js/v0.42.2/mapbox-gl.js")
-insertCSS("https://api.tiles.mapbox.com/mapbox-gl-js/v0.42.2/mapbox-gl.css")
+insertScript("https://api.tiles.mapbox.com/mapbox-gl-js/v0.44.1/mapbox-gl.js")
+insertCSS("https://api.tiles.mapbox.com/mapbox-gl-js/v0.44.1/mapbox-gl.css")
 Utils.insertCSS(mapboxCSS_fix)
 
 # Inspirated on https://github.com/johnmpsherwin/Mapbox-Framer project
@@ -55,6 +55,8 @@ class MapboxJS extends Layer
 		@options.zoom ?= 13.9
 		@options.size ?= Screen.size
 		@options.interactive ?= true
+		@options.pitch ?= 0
+		@options.bearing ?= 0
 		@options.x ?= 0
 		@options.y ?= 0
 
@@ -77,6 +79,8 @@ class MapboxJS extends Layer
 			style: @options.style
 			zoom: @options.zoom
 			center: @options.center
+			pitch: @options.pitch
+			bearing: @options.bearing
 			interactive: @options.interactive
 
 module.exports = MapboxJS
