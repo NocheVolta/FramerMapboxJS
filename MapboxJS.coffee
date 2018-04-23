@@ -46,16 +46,25 @@ Utils.insertCSS(mapboxCSS_fix)
 
 
 
-
+# predefined variables to use later on
 currentMarker=""
-stepDistance=0.01
 accessToken=""
-lineWidth=1
-lineColor="#000"
 mapbox=""
 
+#predefined route stroke attributes
+lineWidth=1
+lineColor="#000"
 
 
+#default step distance when animating markers along the route
+stepDistance=0.01
+
+
+
+
+
+
+#function to animate marker from current location to newpoint location with distance step it will be jumping each 0.01 secod
 exports.animateOnRoute=(marker, newPoint, step)->
 	currentMarker=marker._marker
 	coordinates=currentMarker.getLngLat()
@@ -63,6 +72,8 @@ exports.animateOnRoute=(marker, newPoint, step)->
 	directionRequestUrl="https://api.mapbox.com/directions/v5/mapbox/driving/"+coordinates.lng+","+coordinates.lat+";"+newPoint[0]+","+newPoint[1]+"?geometries=geojson&access_token="+accessToken
 		
 	HTTPRequest(directionRequestUrl,  animateLocation)
+
+
 animateLocation=(response)->
 	route =response.routes[0].geometry
 	iPath = turf.linestring(route.coordinates)
@@ -75,9 +86,11 @@ animateLocation=(response)->
 			currentMarker.setLngLat(iPoint.geometry.coordinates)
 			i++
 		else
-
+			#if needed u can embed function that will fire when marker will reach end point
 			clearInterval interval
 
+
+#customMarker based on Framer design layer
 class exports.CustomMarker
 	constructor: (options={}) ->
 		_.assign @, options
@@ -85,7 +98,7 @@ class exports.CustomMarker
 		
 		return options.target
 	
-		# animateMarker(options.target)	
+#layer based marker
 class exports.Marker extends Layer
 	constructor: (options={}) ->
 		_.assign @, super options
@@ -138,36 +151,71 @@ class exports.MapboxJS extends Layer
 			hash: @options.hash
 			bearing: @options.bearing
 			pitch: @options.pitch
+
+	#method to create 3d style map
+	build3d:()=>	
+			layers = mapbox.getStyle().layers
+			labelLayerId = undefined
+			i = 0
+			while i < layers.length
+
+				if layers[i].type == 'symbol' and layers[i].layout['text-field']
+					labelLayerId = layers[i].id 
+					break
+				i++
+			#   color=Utils.randomColor().toHexString()
+			
+			mapbox.addLayer({
+			'id': '3d-buildings',
+			'source': 'composite',
+			'source-layer': 'building',
+			'filter': ['==', 'extrude', 'true'],
+			'type': 'fill-extrusion',
+			'minzoom': 15,
+			'paint': {
+				'fill-extrusion-color': "#aaa",
+				'fill-extrusion-height': ['interpolate', ['linear'], ['zoom'], 15, 0, 15.05, ['get', 'height']],
+				'fill-extrusion-base': ['interpolate', ['linear'], ['zoom'], 15, 0, 15.05, ['get', 'min_height']],
+				'fill-extrusion-opacity': .8
+			}
+			}, labelLayerId);
+			return
+	# method to animate map to certain point
 	flyTo:(point)=>
 			@options.mapbox.flyTo({center: point})
-	buildRoute: (point1, point2, lW, lC)=>
+
+	#method to create route between 2 points with certain linewidth and linecolor
+	buildRoute: (point1, point2, linewidth, linecolor)=>
 		# print @options.accessToken
-		lineWidth=lW
-		lineColor=lC
+		lineWidth = linewidth
+		lineColor = linecolor
 		directionRequestUrl="https://api.mapbox.com/directions/v5/mapbox/driving/"+point1[0]+","+point1[1]+";"+point2[0]+","+point2[1]+"?geometries=geojson&access_token="+@options.accessToken
 		
 		HTTPRequest(directionRequestUrl,  drawRoute)
-	drawRoute=(response)->
-		route=response.routes[0].geometry
-		# if previous route exist - delete route
-		if mapbox.getLayer("route")
-			mapbox.removeSource("route")
-			mapbox.removeLayer("route")
-			
-		mapbox.addLayer({
-			id: 'route',
-			type: 'line',
-			source: {
-				type: 'geojson',
-				data: {
-				type: 'Feature',
-				geometry: route
-					}
-				},
-			paint: {
-			'line-width': lineWidth,
-			"line-color": lineColor
-			}
-			})
+
+
+
+drawRoute=(response)->
+	route=response.routes[0].geometry
+	# if previous route exist - delete route
+	if mapbox.getLayer("route")
+		mapbox.removeSource("route")
+		mapbox.removeLayer("route")
+		
+	mapbox.addLayer({
+		id: 'route',
+		type: 'line',
+		source: {
+			type: 'geojson',
+			data: {
+			type: 'Feature',
+			geometry: route
+				}
+			},
+		paint: {
+		'line-width': lineWidth,
+		"line-color": lineColor
+		}
+		})
 		
 
