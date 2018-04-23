@@ -33,7 +33,6 @@ myMap = new mapboxJS
 * `size` _Integer or Object_ : Size of the map, set width and height using **{ width:640, height: 480 }** or use a single number to create a square. (default **Screen.size**)
 * `pitch` _Integer_ : The initial pitch (tilt) of the map, measured in degrees away from the plane of the screen (0-60).
 * `bearing` _Integer_ : The initial bearing (rotation) of the map, measured in degrees counter-clockwise from north.
-
 * `x` : Initial X position (default 0)
 * `y` : Initial Y position (default 0)
 * `interactive` _Boolean_ : If  false , no mouse, touch, or keyboard listeners will be attached to the map, so it will not respond to interaction. (default **true**)

@@ -126,9 +126,11 @@ class exports.MapboxJS extends Layer
 		@options.zoom ?= 13.9
 		@options.size ?= Screen.size
 		@options.interactive ?= true
-		@options.bearing ?= 0
-		@options.hash ?= true
 		@options.pitch ?= 0
+		@options.bearing ?= 0
+		@options.x ?= 0
+		@options.y ?= 0
+		@options.hash ?= true
 
 		if !@options.accessToken
 			print "ERROR: accessToken is required"
