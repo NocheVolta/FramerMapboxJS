@@ -17,7 +17,7 @@ Simplest way to integrate Mapbox maps on your prototypes; you can define size, z
 1. Copy `MapboxJS.coffee` file on modules folder inside your Framer project
 2. Add this line on the top 
 ```coffeescript
-mapboxJS = require "MapboxJS"
+{MapboxJS, CustomMarker, Marker, animateOnRoute} = require 'MapboxJS'
 ```
 
 ### How to use
@@ -43,43 +43,120 @@ myMap = new mapboxJS
 
 - `.wrapper` : Returns the layer that contains the map
 - `.mapbox` : Returns the Mapbox instance, useful to interact with the API
+-`.buildRoute: (point1, point2, linewidth, linecolor)` : Draws a line route between two points on map, using response from mapbox direction search API
+-`.flyTo(point)` : Animates map to new location
+
+#Markers
+There are two classes for Markers, one used to create new Framer layer object as marker at certain point, and other one - customMarker is using existing Framer layer to serve as mapbox marker at certain point
+
+#animation
+Use animateOnRoute(markerObject, newPoint, distanceStep) function to animate markerObject to newPoint with distanceStep for animation 
+
+
+
 
 ### Interact with Mapbox API
 Read [Mapbox GL JS documentation](https://www.mapbox.com/mapbox-gl-js/api/ ) to learn how to use the API.
 
 Some extra elements require to load other Mapbox JS files, for example if you want to add a search box (geocoder), [this example](https://www.mapbox.com/mapbox-gl-js/example/mapbox-gl-geocoder/) could help you.
 
-#### Add a custom marker and animate it
+#### Add a marker layer with animation
 ```coffeescript
+
+#some location point
+point1=["-0.118974", "51.531978"]
+point2=["-0.089039","51.526553"]
+
 # Create the map
 myMap = new mapboxJS
     accessToken: 'insertHereYourAccessToken'
     style: 'yourCustomStyleURL'
+    center: point1
 
-# Create the maker as a Layer
-customMarker = new Layer
-    size: 24
-    borderRadius: 100
-    backgroundColor: 'rgba(29, 200, 200, .60)'
+# Create the maker as a Layer and put it to certain point on map
+simpleMarker=new Marker
+	size:20
+	point:point2
+	borderRadius:50
+	backgroundColor:"#ffcc00"
 
-# Insert the marker on the map
-marker = new mapboxgl.Marker(customMarker._element) 
-  .setLngLat([-3.703, 40.409])
-  .addTo(myMap.mapbox)
-
-# CustomMarker animation
-scaleUp = new Animation customMarker,
-  size: 48
+scaleUp = new Animation simpleMarker,
+  size: 30
   options:
     time: 1
     curve: 'ease'
+ scaleUp.start()
 scaleDown = scaleUp.reverse()
-scaleUp.start()
+
 scaleUp.onAnimationEnd -> scaleDown.start()
 scaleDown.onAnimationEnd -> scaleUp.start()
+
 ```
+
+
+#### Add a custom marker  from framer object
+```coffeescript
+
+#if u have an object in designtab or in code, pass target name as target attribute to custom marker
+customMarker=new CustomMarker
+	target:startPoint
+	point:point2
+```
+
+#### Build direction route between two points
+```coffeescript
+
+#using buildRoute method  pass both points, strokeWidth and strokeColor as attribute
+myMap.buildRoute(point1, point2, 9, "#ffcc00")
+
+```
+
+
+#### animate marker to point
+```coffeescript
+
+#use animateOnRoute function, pass marker object there, end point, and distance step - in this case 0.01, tweek this number to make animation smooth depending on size of the route between points
+animateOnRoute(customMarker, point1, 0.01)
+
+```
+
+#### animate map to certain point
+```coffeescript
+
+#use flyTo method and pass end point 
+myMap.flyTo(point2)
+```
+
+#### create 3D map
+```coffeescript
+
+#use build3D method on mapobject load, mind that  bearing, hash and pitch should be set at mapbox initialization
+myMap = new MapboxJS
+	accessToken: mapboxToken	
+	style: styles.light
+	zoom: 12
+	center: originPoint
+	pitch: 45,
+	bearing: -17.6,
+	hash: true
+myMap.mapbox.on 'load', ->
+	myMap.build3d()
+```
+
+
+### Sample project
+<a href='https://framer.cloud/FmFdE' target="_blank">Framer prototype</a>
+
+
+![mapbox gif 2](/mapbox.gif?raw=true)
+
+
+
+
+
 ### Contact & Credits
-You can find me on Twitter [@NocheVolta](https://twitter.com/nochevolta)
+You can find us on Twitter [@NocheVolta](https://twitter.com/nochevolta), [@mamezito](https://twitter.com/mamezito)
+
 
 Inspirated on [this project](https://github.com/johnmpsherwin/Mapbox-Framer) made by [John Sherwin](https://twitter.com/johnmpsherwin).
 
