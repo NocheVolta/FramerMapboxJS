@@ -145,10 +145,12 @@ myMap.mapbox.on 'load', ->
 ```
 
 
+### Sample project
+<a href='https://framer.cloud/FmFdE' target="_blank">Framer prototype</a>
 
 
 ![mapbox gif 2](/mapbox.gif?raw=true)
-<a href='https://framer.cloud/FmFdE' target="_blank">Sample Framer project</a>
+
 
 
 
