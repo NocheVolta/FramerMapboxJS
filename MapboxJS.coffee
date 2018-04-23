@@ -35,14 +35,12 @@ mapboxCSS_fix = """
 }
 """
 
-insertScript("https://api.tiles.mapbox.com/mapbox-gl-js/v0.42.2/mapbox-gl.js")
-insertCSS("https://api.tiles.mapbox.com/mapbox-gl-js/v0.42.2/mapbox-gl.css")
+insertScript("https://api.tiles.mapbox.com/mapbox-gl-js/v0.44.1/mapbox-gl.js")
+insertCSS("https://api.tiles.mapbox.com/mapbox-gl-js/v0.44.1/mapbox-gl.css")
 insertScript("https://api.tiles.mapbox.com/mapbox.js/plugins/turf/v2.0.0/turf.min.js")
 Utils.insertCSS(mapboxCSS_fix)
 
 # Inspirated on https://github.com/johnmpsherwin/Mapbox-Framer project
-
-
 
 # predefined variables to use later on
 currentMarker=""
@@ -147,6 +145,8 @@ class exports.MapboxJS extends Layer
 			style: @options.style
 			zoom: @options.zoom
 			center: @options.center
+			pitch: @options.pitch
+			bearing: @options.bearing
 			interactive: @options.interactive
 			hash: @options.hash
 			bearing: @options.bearing
