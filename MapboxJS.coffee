@@ -37,8 +37,6 @@ mapboxCSS_fix = """
 
 insertScript("https://api.tiles.mapbox.com/mapbox-gl-js/v0.42.2/mapbox-gl.js")
 insertScript("https://api.tiles.mapbox.com/mapbox.js/plugins/turf/v2.0.0/turf.min.js")
-
-
 insertCSS("https://api.tiles.mapbox.com/mapbox-gl-js/v0.42.2/mapbox-gl.css")
 Utils.insertCSS(mapboxCSS_fix)
 
