@@ -1,10 +1,10 @@
 {
   "name": "Mapbox JS",
   "description": "Simplest way to integrate Mapbox maps on your prototypes; it lets you to use the full API.",
-  "author": "Iván Flores",
+  "author": "Iván Flores, Sergiy Voronov",
 
-  "require": "mapboxJS = require 'MapboxJS'" ,
-  "install": "MapboxJS.coffee",
+  "require": "{MapboxJS, CustomMarker, Marker, animateOnRoute} = require 'mapbox-js/MapboxJS'",
+  "install": ["MapboxJS.coffee","HTTPRequest.coffee"],
   "example": "example.coffee",
 
   "thumb": "mapboxjs.png"
