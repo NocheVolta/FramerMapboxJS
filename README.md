@@ -43,17 +43,14 @@ myMap = new mapboxJS
 
 - `.wrapper` : Returns the layer that contains the map
 - `.mapbox` : Returns the Mapbox instance, useful to interact with the API
--`.buildRoute: (point1, point2, linewidth, linecolor)` : Draws a line route between two points on map, using response from mapbox direction search API
--`.flyTo(point)` : Animates map to new location
+- `.buildRoute: (point1, point2, linewidth, linecolor)` : Draws a line route between two points on map, using response from mapbox direction search API
+- `.flyTo(point)` : Animates map to new location
 
 #Markers
 There are two classes for Markers, one used to create new Framer layer object as marker at certain point, and other one - customMarker is using existing Framer layer to serve as mapbox marker at certain point
 
 #animation
 Use animateOnRoute(markerObject, newPoint, distanceStep) function to animate markerObject to newPoint with distanceStep for animation 
-
-
-
 
 ### Interact with Mapbox API
 Read [Mapbox GL JS documentation](https://www.mapbox.com/mapbox-gl-js/api/ ) to learn how to use the API.
@@ -69,23 +66,23 @@ point2=["-0.089039","51.526553"]
 
 # Create the map
 myMap = new mapboxJS
-    accessToken: 'insertHereYourAccessToken'
-    style: 'yourCustomStyleURL'
-    center: point1
+  accessToken: 'insertHereYourAccessToken'
+  style: 'yourCustomStyleURL'
+  center: point1
 
 # Create the maker as a Layer and put it to certain point on map
 simpleMarker=new Marker
-	size:20
-	point:point2
-	borderRadius:50
-	backgroundColor:"#ffcc00"
+  size:20
+  point:point2
+  borderRadius:50
+  backgroundColor:"#ffcc00"
 
 scaleUp = new Animation simpleMarker,
   size: 30
   options:
     time: 1
     curve: 'ease'
- scaleUp.start()
+scaleUp.start()
 scaleDown = scaleUp.reverse()
 
 scaleUp.onAnimationEnd -> scaleDown.start()
@@ -97,10 +94,10 @@ scaleDown.onAnimationEnd -> scaleUp.start()
 #### Add a custom marker  from framer object
 ```coffeescript
 
-#if u have an object in designtab or in code, pass target name as target attribute to custom marker
+# if u have an object in designtab or in code, pass target name as target attribute to custom marker
 customMarker=new CustomMarker
-	target:startPoint
-	point:point2
+  target:startPoint
+  point:point2
 ```
 
 #### Build direction route between two points
@@ -111,11 +108,10 @@ myMap.buildRoute(point1, point2, 9, "#ffcc00")
 
 ```
 
-
 #### animate marker to point
 ```coffeescript
 
-#use animateOnRoute function, pass marker object there, end point, and distance step - in this case 0.01, tweek this number to make animation smooth depending on size of the route between points
+# use animateOnRoute function, pass marker object there, end point, and distance step - in this case 0.01, tweek this number to make animation smooth depending on size of the route between points
 animateOnRoute(customMarker, point1, 0.01)
 
 ```
@@ -123,40 +119,33 @@ animateOnRoute(customMarker, point1, 0.01)
 #### animate map to certain point
 ```coffeescript
 
-#use flyTo method and pass end point 
+# use flyTo method and pass end point 
 myMap.flyTo(point2)
 ```
 
 #### create 3D map
 ```coffeescript
 
-#use build3D method on mapobject load, mind that  bearing, hash and pitch should be set at mapbox initialization
+# use build3D method on mapobject load, mind that  bearing, hash and pitch should be set at mapbox initialization
 myMap = new MapboxJS
-	accessToken: mapboxToken	
-	style: styles.light
-	zoom: 12
-	center: originPoint
-	pitch: 45,
-	bearing: -17.6,
-	hash: true
+  accessToken: mapboxToken	
+  style: styles.light
+  zoom: 12
+  center: originPoint
+  pitch: 45,
+  bearing: -17.6,
+  hash: true
 myMap.mapbox.on 'load', ->
-	myMap.build3d()
+  myMap.build3d()
 ```
-
 
 ### Sample project
 <a href='https://framer.cloud/FmFdE' target="_blank">Framer prototype</a>
 
-
 ![mapbox gif 2](/mapbox.gif?raw=true)
-
-
-
-
 
 ### Contact & Credits
 You can find us on Twitter [@NocheVolta](https://twitter.com/nochevolta), [@mamezito](https://twitter.com/mamezito)
-
 
 Inspirated on [this project](https://github.com/johnmpsherwin/Mapbox-Framer) made by [John Sherwin](https://twitter.com/johnmpsherwin).
 
