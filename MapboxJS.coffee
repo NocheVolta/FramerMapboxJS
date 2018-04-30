@@ -2,6 +2,8 @@
 { HTTPRequest } = require "HTTPRequest"
 exports.HTTPRequest = HTTPRequest
 
+mapboxGetDirectionsBaseURL = "https://api.mapbox.com/directions/v5/mapbox/driving/"
+
 # INCLUDE JS and CSS
 insertScript = (url) ->
   lib = Utils.domLoadDataSync url
@@ -50,7 +52,6 @@ currentMarker = accessToken = mapbox = null
 lineWidth = 1
 lineColor = "#000"
 
-
 #default step distance when animating markers along the route
 stepDistance = 0.01
 
@@ -59,24 +60,22 @@ exports.animateOnRoute = (marker, newPoint, step) ->
   currentMarker = marker._marker
   coordinates = currentMarker.getLngLat()
   stepDistance = step
-  directionRequestUrl = "https://api.mapbox.com/directions/v5/mapbox/driving/" + coordinates.lng + "," + coordinates.lat + ";" + newPoint[0] + "," + newPoint[1] + "?geometries=geojson&access_token=" + accessToken
+  directionRequestUrl = mapboxGetDirectionsBaseURL + coordinates.lng + "," + coordinates.lat + ";" + newPoint[0] + "," + newPoint[1] + "?geometries=geojson&access_token=" + accessToken
   HTTPRequest(directionRequestUrl,  animateLocation)
-
 
 animateLocation = (response) ->
   route = response.routes[0].geometry
-  iPath = turf.linestring(route.coordinates)
-  iPathLength = turf.lineDistance(iPath, 'miles')
-  steps = Math.floor(iPathLength / stepDistance)
+  polyline = turf.linestring(route.coordinates)
+  polylineLength = turf.lineDistance(polyline, 'kilometers')
+  steps = Math.floor(polylineLength / stepDistance)
   i = 0
-  interval = Utils.interval 0.01, ->
-    if i != steps
-      iPoint = turf.along(iPath, stepDistance * i, 'miles')
+  moveMarker = () ->
+    if i <= steps
+      iPoint = turf.along(polyline, stepDistance * i, 'kilometers')
       currentMarker.setLngLat(iPoint.geometry.coordinates)
       i++
-    else
-      #if needed u can embed function that will fire when marker will reach end point
-      clearInterval interval
+      requestAnimationFrame moveMarker
+  moveMarker()
 
 #customMarker based on Framer design layer
 class exports.CustomMarker
@@ -168,10 +167,10 @@ class exports.MapboxJS extends Layer
     @options.mapbox.flyTo({ center: point })
 
   #method to create route between 2 points with certain linewidth and linecolor
-  buildRoute: (point1, point2, linewidth, linecolor) =>
+  buildRoute: (point1, point2, linewidth = 1, linecolor = "#FF0000") =>
     lineWidth = linewidth
     lineColor = linecolor
-    directionRequestUrl = "https://api.mapbox.com/directions/v5/mapbox/driving/" + point1[0] + "," + point1[1] + ";" + point2[0] + "," + point2[1] + "?geometries=geojson&access_token=" + @options.accessToken
+    directionRequestUrl = mapboxGetDirectionsBaseURL + point1[0] + "," + point1[1] + ";" + point2[0] + "," + point2[1] + "?geometries=geojson&access_token=" + @options.accessToken
     HTTPRequest(directionRequestUrl, drawRoute)
 
 drawRoute = (response) ->
