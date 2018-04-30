@@ -1,5 +1,4 @@
 #fixing crossorigin problem
-
 Utils.CORSproxy = (url) ->
 
 		# Detect local IPv4/IvP6 addresses
@@ -11,12 +10,12 @@ Utils.CORSproxy = (url) ->
 		
 		return "https://cors-anywhere.herokuapp.com/#{url}"
 
-#httpRequest function	
-exports.HTTPRequest= (url, responseFunc) ->
+#httpRequest function
+exports.HTTPRequest = (url, responseFunc) ->
 
 	r = new XMLHttpRequest
 	r.open 'GET', Utils.CORSproxy(url), true
-	r.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded; charset=UTF-8');
+	r.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded; charset=UTF-8')
 
 	r.onreadystatechange = ->
 		if r.readyState != 4 or r.status != 200
@@ -28,6 +27,4 @@ exports.HTTPRequest= (url, responseFunc) ->
 			
 			responseFunc(response)
 			
-	r.send()		
-
-
+	r.send()
