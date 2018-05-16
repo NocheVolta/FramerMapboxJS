@@ -14,7 +14,7 @@ Simplest way to integrate Mapbox maps on your prototypes; you can define size, z
 </a>
 
 #### Manual
-1. Copy `MapboxJS.coffee` file on modules folder inside your Framer project
+1. Copy the `MapboxJS.coffee` and `HTTPRequest.coffee` files to the ‘modules’ folder inside your Framer project
 2. Add this line on the top 
 ```coffeescript
 {MapboxJS, CustomMarker, Marker, animateOnRoute} = require 'MapboxJS'
@@ -23,7 +23,7 @@ Simplest way to integrate Mapbox maps on your prototypes; you can define size, z
 ### How to use
 Init the map with your `accessToken`, generate it on [Mapbox website](https://www.mapbox.com/help/define-access-token/), it's free. **Without this, the map won't work.**  
 ```coffeescript
-myMap = new mapboxJS
+myMap = new MapboxJS
   accessToken: 'insertHereYourAccessToken'
 ```
 ### Customization
