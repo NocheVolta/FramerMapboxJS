@@ -60,9 +60,9 @@ Some extra elements require to load other Mapbox JS files, for example if you wa
 #### Add a marker layer with animation
 ```coffeescript
 
-#some location point
-point1=["-0.118974", "51.531978"]
-point2=["-0.089039","51.526553"]
+# Latitude and Longitude 
+point1 = [-0.118974, 51.531978]
+point2 = [-0.089039, 51.526553]
 
 # Create the map
 myMap = new mapboxJS
@@ -70,18 +70,17 @@ myMap = new mapboxJS
   style: 'yourCustomStyleURL'
   center: point1
 
-# Create the maker as a Layer and put it to certain point on map
-simpleMarker=new Marker
-  size:20
-  point:point2
-  borderRadius:50
-  backgroundColor:"#ffcc00"
+# Create the maker using the Layer's attributes and put it to certain point on map
+simpleMarker = new Marker
+  map: myMap.mapbox
+  lngLat: point2
+  size: 20
+  borderRadius: 50
+  backgroundColor: "#ffcc00"
 
 scaleUp = new Animation simpleMarker,
   size: 30
-  options:
-    time: 1
-    curve: 'ease'
+  options: time: 1, curve: Bezier.ease
 scaleUp.start()
 scaleDown = scaleUp.reverse()
 
@@ -94,10 +93,11 @@ scaleDown.onAnimationEnd -> scaleUp.start()
 #### Add a custom marker  from framer object
 ```coffeescript
 
-# if u have an object in designtab or in code, pass target name as target attribute to custom marker
-customMarker=new CustomMarker
-  target:startPoint
-  point:point2
+# If u have an object in Design tab or in Code, pass target name as target attribute to custom marker
+customMarker = new CustomMarker
+  map: myMap.mapbox
+  lngLat: point2
+  element: startPoint # Target in the Design tab must be a frame.
 ```
 
 #### Build direction route between two points
@@ -149,4 +149,4 @@ You can find us on Twitter [@NocheVolta](https://twitter.com/nochevolta), [@mame
 
 Inspirated on [this project](https://github.com/johnmpsherwin/Mapbox-Framer) made by [John Sherwin](https://twitter.com/johnmpsherwin).
 
-This project is not realted with Mapbox company.
+This project is not realted to the Mapbox company.

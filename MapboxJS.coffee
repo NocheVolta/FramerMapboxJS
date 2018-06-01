@@ -77,18 +77,17 @@ animateLocation = (response) ->
       requestAnimationFrame moveMarker
   moveMarker()
 
-#customMarker based on Framer design layer
+# Create marker based on a frame in the Design tab
 class exports.CustomMarker
   constructor: (options = {}) ->
     _.assign @, options
-    options.target._marker = new mapboxgl.Marker(options.target._element).setLngLat(options.point).addTo(mapbox)
-    return options.target
+    options.element._marker = new mapboxgl.Marker(options.element._element).setLngLat(options.lngLat).addTo(options.map)
 
 #layer based marker
 class exports.Marker extends Layer
   constructor: (options = {}) ->
     _.assign @, super options
-    @_marker = new mapboxgl.Marker(@_element).setLngLat(options.point).addTo(mapbox)
+    @_marker = new mapboxgl.Marker(@_element).setLngLat(options.lngLat).addTo(options.map)
 
 class exports.MapboxJS extends Layer
   @define "wrapper",
