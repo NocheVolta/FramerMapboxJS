@@ -82,7 +82,7 @@ scaleDown.onAnimationEnd -> scaleUp.start()
 
 ```
 
-### Add a marker from the Desige tab
+### Add a marker from the Design tab
 ```coffeescript
 customMarker = new CustomMarker
   map: myMap.mapbox
