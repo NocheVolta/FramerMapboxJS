@@ -1,7 +1,3 @@
-#includes of httprequests with crossproxy
-{ HTTPRequest } = require "HTTPRequest"
-exports.HTTPRequest = HTTPRequest
-
 mapboxGetDirectionsBaseURL = "https://api.mapbox.com/directions/v5/mapbox/driving/"
 
 # INCLUDE JS and CSS
@@ -45,49 +41,8 @@ Utils.insertCSS(mapboxCSS_fix)
 
 # Inspirated on https://github.com/johnmpsherwin/Mapbox-Framer project
 
-# predefined variables to use later on
-currentMarker = accessToken = mapbox = null
-
-#predefined route stroke attributes
-lineWidth = 1
-lineColor = "#000"
-
-#default step distance when animating markers along the route
-stepDistance = 0.01
-
-#function to animate marker from current location to newpoint location with distance step it will be jumping each 0.01 secod
-exports.animateOnRoute = (marker, newPoint, step) ->
-  currentMarker = marker._marker
-  coordinates = currentMarker.getLngLat()
-  stepDistance = step
-  directionRequestUrl = mapboxGetDirectionsBaseURL + coordinates.lng + "," + coordinates.lat + ";" + newPoint[0] + "," + newPoint[1] + "?geometries=geojson&access_token=" + accessToken
-  HTTPRequest(directionRequestUrl,  animateLocation)
-
-animateLocation = (response) ->
-  route = response.routes[0].geometry
-  polyline = turf.linestring(route.coordinates)
-  polylineLength = turf.lineDistance(polyline, 'kilometers')
-  steps = Math.floor(polylineLength / stepDistance)
-  i = 0
-  moveMarker = () ->
-    if i <= steps
-      iPoint = turf.along(polyline, stepDistance * i, 'kilometers')
-      currentMarker.setLngLat(iPoint.geometry.coordinates)
-      i++
-      requestAnimationFrame moveMarker
-  moveMarker()
-
-# Create marker based on a frame in the Design tab
-class exports.CustomMarker
-  constructor: (options = {}) ->
-    _.assign @, options
-    options.element._marker = new mapboxgl.Marker(options.element._element).setLngLat(options.lngLat).addTo(options.map)
-
-#layer based marker
-class exports.Marker extends Layer
-  constructor: (options = {}) ->
-    _.assign @, super options
-    @_marker = new mapboxgl.Marker(@_element).setLngLat(options.lngLat).addTo(options.map)
+# Global variable
+accessToken = null
 
 class exports.MapboxJS extends Layer
   @define "wrapper",
@@ -102,7 +57,7 @@ class exports.MapboxJS extends Layer
   constructor: (@options = {}) ->
     @options.accessToken ?= null
     @options.style ?= 'mapbox://styles/mapbox/streets-v9'
-    @options.center ?= [-3.703, 40.409]
+    @options.center ?= [-3.70346, 40.41676]
     @options.zoom ?= 13.9
     @options.size ?= Screen.size
     @options.interactive ?= true
@@ -165,32 +120,62 @@ class exports.MapboxJS extends Layer
   flyTo: (point) =>
     @options.mapbox.flyTo({ center: point })
 
-  #method to create route between 2 points with certain linewidth and linecolor
-  buildRoute: (point1, point2, linewidth = 1, linecolor = "#FF0000") =>
-    lineWidth = linewidth
-    lineColor = linecolor
-    directionRequestUrl = mapboxGetDirectionsBaseURL + point1[0] + "," + point1[1] + ";" + point2[0] + "," + point2[1] + "?geometries=geojson&access_token=" + @options.accessToken
-    HTTPRequest(directionRequestUrl, drawRoute)
+# Create marker based on a frame in the Design tab
+class exports.CustomMarker
+  constructor: (options = {}) ->
+    _.assign @, options
+    options.element._marker = new mapboxgl.Marker(options.element._element).setLngLat(options.lngLat).addTo(options.map)
 
-drawRoute = (response) ->
-  route = response.routes[0].geometry
-  # if previous route exist - delete route
-  if mapbox.getLayer("route")
-    mapbox.removeSource("route")
-    mapbox.removeLayer("route")
+# Create basic marker
+class exports.Marker extends Layer
+  constructor: (options = {}) ->
+    _.assign @, super options
+    @_marker = new mapboxgl.Marker(@_element).setLngLat(options.lngLat).addTo(options.map)
 
-  mapbox.addLayer({
-    id: 'route',
-    type: 'line',
-    source: {
-      type: 'geojson',
-      data: {
-        type: 'Feature',
-        geometry: route
-        }
-      },
-    paint: {
-      'line-width': lineWidth,
-      "line-color": lineColor
-    }
-  })
+# Paint a route
+class exports.PaintRoute
+  constructor: (options = {}) ->
+    _.assign @, options
+    directionRequestUrl = mapboxGetDirectionsBaseURL + options.start[0] + "," + options.start[1] + ";" + options.end[0] + "," + options.end[1] + "?geometries=geojson&access_token=" + accessToken
+
+    if !options.layout then options.layout = {}
+    if !options.paint then options.paint = {}
+
+    fetch(directionRequestUrl).then((response) ->
+      response.json()
+    ).then((json) ->
+      route = json.routes[0].geometry
+      options.map.addLayer({
+        id: options.id,
+        type: 'line',
+        source: {
+          type: 'geojson',
+          data: { type: 'Feature', geometry: route }
+        },
+        layout: options.layout
+        paint: options.paint
+      })
+    )
+
+# Animate marker through a route
+exports.animateMarker = (marker, endPoint, stepDistance = 0.1) ->
+  currentMarker = marker._marker
+  coordinates = currentMarker.getLngLat()
+  directionRequestUrl = mapboxGetDirectionsBaseURL + coordinates.lng + "," + coordinates.lat + ";" + endPoint[0] + "," + endPoint[1] + "?geometries=geojson&access_token=" + accessToken
+
+  fetch(directionRequestUrl).then((response) ->
+      response.json()
+    ).then((json) ->
+      route = json.routes[0].geometry
+      polyline = turf.linestring(route.coordinates)
+      polylineLength = turf.lineDistance(polyline, 'kilometers')
+      steps = Math.floor(polylineLength / stepDistance)
+      i = 0
+      moveMarker = () ->
+        if i <= steps
+          iPoint = turf.along(polyline, stepDistance * i, 'kilometers')
+          currentMarker.setLngLat(iPoint.geometry.coordinates)
+          i++
+          requestAnimationFrame moveMarker
+      moveMarker()
+    )

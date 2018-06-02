@@ -14,10 +14,10 @@ Simplest way to integrate Mapbox maps on your prototypes; you can define size, z
 </a>
 
 #### Manual
-1. Copy the `MapboxJS.coffee` and `HTTPRequest.coffee` files to the ‘modules’ folder inside your Framer project
+1. Copy the `MapboxJS.coffee` file to the ‘modules’ folder inside your Framer project
 2. Add this line on the top 
 ```coffeescript
-{MapboxJS, CustomMarker, Marker, animateOnRoute} = require 'MapboxJS'
+{MapboxJS, CustomMarker, Marker, animateMarker} = require 'MapboxJS'
 ```
 
 ### How to use
@@ -43,40 +43,33 @@ myMap = new MapboxJS
 
 - `.wrapper` : Returns the layer that contains the map
 - `.mapbox` : Returns the Mapbox instance, useful to interact with the API
-- `.buildRoute: (point1, point2, linewidth, linecolor)` : Draws a line route between two points on map, using response from mapbox direction search API
 - `.flyTo(point)` : Animates map to new location
-
-#Markers
-There are two classes for Markers, one used to create new Framer layer object as marker at certain point, and other one - customMarker is using existing Framer layer to serve as mapbox marker at certain point
-
-#animation
-Use animateOnRoute(markerObject, newPoint, distanceStep) function to animate markerObject to newPoint with distanceStep for animation 
 
 ### Interact with Mapbox API
 Read [Mapbox GL JS documentation](https://www.mapbox.com/mapbox-gl-js/api/ ) to learn how to use the API.
 
 Some extra elements require to load other Mapbox JS files, for example if you want to add a search box (geocoder), [this example](https://www.mapbox.com/mapbox-gl-js/example/mapbox-gl-geocoder/) could help you.
 
-#### Add a marker layer with animation
+### Add a marker with animation
 ```coffeescript
-
-# Latitude and Longitude 
-point1 = [-0.118974, 51.531978]
-point2 = [-0.089039, 51.526553]
+# Latitude and Longitude points
+centerPoint = [-3.70346, 40.41676]
+startPoint = [-3.70773, 40.42135]
+endPoint = [-3.702478, 40.41705]
 
 # Create the map
 myMap = new mapboxJS
   accessToken: 'insertHereYourAccessToken'
   style: 'yourCustomStyleURL'
-  center: point1
+  center: centerPoint
 
-# Create the maker using the Layer's attributes and put it to certain point on map
+# Create a maker using the Layer's attributes and put it into the map
 simpleMarker = new Marker
   map: myMap.mapbox
-  lngLat: point2
+  lngLat: endPoint
   size: 20
-  borderRadius: 50
-  backgroundColor: "#ffcc00"
+  borderRadius: 40
+  backgroundColor: "#FF0000"
 
 scaleUp = new Animation simpleMarker,
   size: 30
@@ -89,41 +82,37 @@ scaleDown.onAnimationEnd -> scaleUp.start()
 
 ```
 
-
-#### Add a custom marker  from framer object
+### Add a marker from the Desige tab
 ```coffeescript
-
-# If u have an object in Design tab or in Code, pass target name as target attribute to custom marker
 customMarker = new CustomMarker
   map: myMap.mapbox
-  lngLat: point2
-  element: startPoint # Target in the Design tab must be a frame.
+  lngLat: startPoint
+  element: targetName # Target must be a frame
 ```
 
-#### Build direction route between two points
+### Paint route between two points
 ```coffeescript
-
-#using buildRoute method  pass both points, strokeWidth and strokeColor as attribute
-myMap.buildRoute(point1, point2, 9, "#ffcc00")
-
+route = new PaintRoute
+  id: 'route-1' # Must be a unique name
+  map: myMap.mapbox
+  start: startPoint
+  end: endPoint
+  layout: { 'line-cap': 'round' }
+  paint: { 'line-width': 2, 'line-color': '#FF0000', "line-dasharray": [1, 2, 0]}
 ```
+Read more about now to use the [`layout` and `paint` properties](https://www.mapbox.com/mapbox-gl-js/style-spec#layers-line).
 
-#### animate marker to point
+### Animate marker through a route
 ```coffeescript
-
-# use animateOnRoute function, pass marker object there, end point, and distance step - in this case 0.01, tweek this number to make animation smooth depending on size of the route between points
-animateOnRoute(customMarker, point1, 0.01)
-
+animateMarker(customMarker, endPoint, 0.01)
 ```
 
-#### animate map to certain point
+### Animate map to certain point
 ```coffeescript
-
-# use flyTo method and pass end point 
-myMap.flyTo(point2)
+myMap.flyTo(endPoint)
 ```
 
-#### create 3D map
+### Create 3D map
 ```coffeescript
 
 # use build3D method on mapobject load, mind that  bearing, hash and pitch should be set at mapbox initialization
@@ -140,7 +129,7 @@ myMap.mapbox.on 'load', ->
 ```
 
 ### Sample project
-<a href='https://framer.cloud/FmFdE' target="_blank">Framer prototype</a>
+[Framer prototype](https://framer.cloud/FmFdE)
 
 ![mapbox gif 2](/mapbox.gif?raw=true)
 
